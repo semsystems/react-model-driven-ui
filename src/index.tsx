@@ -31,5 +31,5 @@ export function Interface({model, lib}: TInterface) {
     
     const Tree = iterate(model);
 
-    return <>{Tree}</>
+    return <div>{Tree}</div>
 }
