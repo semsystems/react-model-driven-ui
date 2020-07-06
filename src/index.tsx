@@ -1,10 +1,35 @@
-import * as React from 'react'
-import styles from './styles.module.css'
+import React from 'react';
 
-interface Props {
-  text: string
+interface UIComponent {
+    element: string,
+    content?: UIComponent[] | null | string
+    properties?: object
 }
 
-export const ExampleComponent = ({ text }: Props) => {
-  return <div className={styles.test}>Example Component: {text}</div>
+interface TInterface {
+    model: UIComponent[],
+    lib: any
+}
+
+export function Interface({model, lib}: TInterface) {
+    if (typeof model !== "object") {
+        return null
+    } 
+    // @ts-ignore
+    const iterate = (model: UIComponent[]) => {
+        return model.map(e => {
+            const {element, properties, content} = e;
+    
+            return React.createElement(lib[(element)], {
+                ...properties,
+            }, typeof content === 'object' 
+                // @ts-ignore
+                ? iterate(content)
+                : content)
+        });
+    }
+    
+    const Tree = iterate(model);
+
+    return <>{Tree}</>
 }
